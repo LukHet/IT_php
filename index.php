@@ -2,10 +2,13 @@
 <html lang="pl">
 <head>
 	<meta charset="utf-8"/>
-	<link rel="stylesheet" href="sunnyStyle.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
-<div class="hero-image">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
 <?php
 	include('simple_html_dom.php');
 
@@ -22,19 +25,6 @@
 	$godziny = date('H');
 	$czas_zakonczenia = date('H:i');
 	header("Refresh:60");
-	echo("Ostatnie odświeżenie: ");
-	echo "<br>";
-	date_default_timezone_set('Europe/Warsaw');
-	echo date('H:i:s Y-m-d');
-	echo "<br>";
-	echo "<br>";
-	echo "<br>";
-	echo ("Aktualna temperatura: ");
-	$aktualna_temperatura = $interia->find('div [class="weather-currently-temp-strict"]',0);
-	echo $aktualna_temperatura->plaintext;
-	echo "<br>";
-	echo "<br>";
-	echo "<br>";
 	$lista_temperatur_interia[23]=0;
 	$lista_temperatur_onet[23]=0;
 	$lista_temperatur_zet[23]=0;
@@ -59,7 +49,7 @@
 	for($i = 0; $i < 5; $i++){
 	$tempData = $interia->find('div [class="forecast-top"]',$i);
 	$tempData_array = $tempData->find('span');
-	$intTemp[$i] = preg_replace('/[^0-9]/', '', $tempData_array[2]);
+	$intTemp[$i] = preg_replace('/[^-?0-9]/', '', $tempData_array[2]->plaintext);
 	}
 	//temperatury interia
 	//----------------------------------------------------------------------
@@ -80,7 +70,7 @@
 	//temperatury onet
 	for($i = 0; $i < 5; $i++){
 	$tempData = $onet->find('div [class="temp"]',$i+1);
-	$onTemp[$i] = preg_replace('/[^0-9]/', '', $tempData->plaintext);
+	$onTemp[$i] = preg_replace('/[^-?0-9]/', '', $tempData->plaintext);
 	}
 	//temperatury onet
 	//----------------------------------------------------------------------
@@ -100,7 +90,7 @@
 	//temperatury zet
 	for($i = 0; $i < 5; $i++){
 	$tempData = $zet->find('div [class="single-weather-item__temperature single-weather-item__item"]',$i+1);
-	$zetTemp[$i] = preg_replace('/[^0-9]/', '', $tempData->plaintext);
+	$zetTemp[$i] = preg_replace('/[^-?0-9]/', '', $tempData->plaintext);
 	}
 	//temperatury zet
 	//----------------------------------------------------------------------
@@ -115,7 +105,70 @@
 	}
 	//godziny zet
 	//----------------------------------------------------------------------
-	
+?>
+<figure class="text-center">
+  <blockquote class="blockquote">
+    <h1>Pogodeo: porównywarka prognoz pogodowych</h1>
+  </blockquote>
+  <figcaption class="blockquote-footer">
+    Ostatnie odświeżenie:
+  <?php
+  echo date('H:i:s Y-m-d');
+  echo "<br>";
+	echo ("Aktualna temperatura: ");
+	$aktualna_temperatura = $interia->find('div [class="weather-currently-temp-strict"]',0);
+	echo $aktualna_temperatura->plaintext;
+	echo "<br>";
+	echo "Miasto: Sosnowiec";
+  ?>
+  </figcaption>
+</figure>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">godzina</th>
+      <th scope="col">Onet</th>
+      <th scope="col">Interia</th>
+      <th scope="col">Zet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row"><?php echo $zetHour[0]?></th>
+      <td><?php echo $onTemp[0], "°C"?></td>
+      <td><?php echo $intTemp[0], "°C"?></td>
+      <td><?php echo $zetTemp[0], "°C"?></td>
+    </tr>
+    <tr>
+      <th scope="row"><?php echo $zetHour[1]?></th>
+      <td><?php echo $onTemp[1], "°C"?></td>
+      <td><?php echo $intTemp[1], "°C"?></td>
+      <td><?php echo $zetTemp[1], "°C"?></td>
+    </tr>
+    <tr>
+      <th scope="row"><?php echo $zetHour[2]?></th>
+      <td><?php echo $onTemp[2], "°C"?></td>
+      <td><?php echo $intTemp[2], "°C"?></td>
+      <td><?php echo $zetTemp[2], "°C"?></td>
+    </tr>
+	<tr>
+      <th scope="row"><?php echo $zetHour[3]?></th>
+      <td><?php echo $onTemp[3], "°C"?></td>
+      <td><?php echo $intTemp[3], "°C"?></td>
+      <td><?php echo $zetTemp[3], "°C"?></td>
+    </tr>
+	<tr>
+      <th scope="row"><?php echo $zetHour[4]?></th>
+      <td><?php echo $onTemp[4], "°C"?></td>
+      <td><?php echo $intTemp[4], "°C"?></td>
+      <td><?php echo $zetTemp[4], "°C"?></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<?php
+/*
 //-----------------------WYŚWIETLANIE
 //Interia
 echo $interia->find('title', 0)->plaintext,"<br>";
@@ -136,11 +189,11 @@ echo $zet->find('title', 0)->plaintext,"<br>";
 for($i = 0; $i < 5; $i++){
 	echo "<br>";
 	echo $zetHour[$i]," ",$zetTemp[$i], "°C<br>";
-}
+}*/
 //----------------------------------------------------------------------
 
-
-//-----------------------PRZYPISYWANIE (TE LISTY TRZEBA DO SQL DODAĆ)
+/*
+//-----------------------PRZYPISYWANIE (TE LISTY TRZEBA DO SQL WPISAĆ)
 //Interia
 for($i = 0; $i < 5; $i++){
 	for($j = 0; $j < 23; $j++){
@@ -172,7 +225,7 @@ if ($minuty == "00")
 //----------------------------------------------------------------------
 
 
-//-----------------------POROWNANIE (TO TEŻ TRZEBA TEŻ DO SQL DODAĆ)
+//-----------------------POROWNANIE (TO TEŻ TRZEBA TEŻ DO SQL WPISAĆ)
 //Interia
 for($i = 0; $i < 5; $i++){
 	for($j = 0; $j < 23; $j++){
@@ -198,15 +251,15 @@ for($i = 0; $i < 5; $i++){
 	}
 }
 //----------------------------------------------------------------------
-
-//if ($minuty == "25"){
+*/
+/*if ($minuty == "25"){
 	$lista_aktualnych_czasow[$godziny]=$godziny;
 	$lista_aktualnych_temperatur[$godziny]=$aktualna_temperatura;
 	preg_replace('/\t+/', '',$lista_aktualnych_temperatur[$godziny]);
 	echo "<br>";
 	echo $lista_aktualnych_czasow[$godziny];
 	echo $lista_aktualnych_temperatur[$godziny];
-	//}
+	//}*/
 	
 //$tekst = $list_array29[0]->plaintext;
 //$tekst1 = substr($tekst, 0, 2);
@@ -218,20 +271,80 @@ $conn = new mysqli("localhost","root","","sunny");
 if($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
-$sql = "INSERT INTO today (Hour,Interia_temperature,Onet_temperature,Zet_temperature)
-VALUES ('".$intH."', ".$intTemp1.",".$onTemp1.", ".$zetTemp1.")";
+for($i = 0; $i < 5; $i++){											//Database operations for the Interia website
+$sqlInt = "UPDATE interia_temp1 SET `".substr($zetHour[$i],0,2)."`= ".$intTemp[$i]." WHERE Hour_tested = '".date('H')."'";
 
-if($conn->query($sql) === TRUE) {
-	echo "New record created succesfully";
-}else{
-	echo "Error: " .$sql."<br>".$conn->error;
+if($conn->query($sqlInt) === FALSE) {
+	echo "Error: " .$sqlInt."<br>".$conn->error;
+}
+}
+$sqlQInt = "SELECT `".date('H')."` FROM interia_temp1 WHERE Hour_tested = '".(date('H')-1)."'";				//taking data from mysql database
+$result = $conn->query($sqlQInt);
+$prevTempInt = $result->fetch_array(MYSQLI_NUM);
+
+$currTempInt = preg_replace('/[^-?0-9]/', '', $aktualna_temperatura->plaintext);	//changing current temperature to be usable in an equation
+if($prevTempInt != NULL){
+	
+$errTempInt = $prevTempInt[0] - $currTempInt;					//calculating error
+$sqlInt = "UPDATE interia_errtemp1 SET `".date('H')."`= ".$errTempInt." WHERE Hour_tested = '".(date('H')-1)."'";//sending error to database
+
+if($conn->query($sqlInt) === FALSE) {
+	echo "Error: " .$sqlInt."<br>".$conn->error;
+}
 }
 
+
+for($i = 0; $i < 5; $i++){											//Database operations for the Onet website
+$sqlOnet = "UPDATE onet_temp1 SET `".substr($zetHour[$i],0,2)."`= ".$onTemp[$i]." WHERE Hour_tested = '".date('H')."'";
+
+if($conn->query($sqlOnet) === FALSE) {
+	echo "Error: " .$sqlOnet."<br>".$conn->error;
+}
+}
+$sqlQOnet = "SELECT `".date('H')."` FROM onet_temp1 WHERE Hour_tested = '".(date('H')-1)."'";				//taking data from mysql database
+$result = $conn->query($sqlQOnet);
+$prevTempOnet = $result->fetch_array(MYSQLI_NUM);
+
+$currTempOnet = preg_replace('/[^-?0-9]/', '', $aktualna_temperatura->plaintext);	//changing current temperature to be usable in an equation
+if($prevTempOnet != NULL){
+	
+$errTempOnet = $prevTempOnet[0] - $currTempOnet;					//calculating error
+$sqlOnet = "UPDATE onet_errtemp1 SET `".date('H')."`= ".$errTempOnet." WHERE Hour_tested = '".(date('H')-1)."'";//sending error to database
+
+if($conn->query($sqlOnet) === FALSE) {
+	echo "Error: " .$sqlOnet."<br>".$conn->error;
+}
+}
+
+
+
+for($i = 0; $i < 5; $i++){											//Database operations for the Zet website
+$sqlZet = "UPDATE zet_temp1 SET `".substr($zetHour[$i],0,2)."`= ".$zetTemp[$i]." WHERE Hour_tested = '".date('H')."'";
+
+if($conn->query($sqlZet) === FALSE) {
+	echo "Error: " .$sqlZet."<br>".$conn->error;
+}
+}
+$sqlQZet = "SELECT `".date('H')."` FROM zet_temp1 WHERE Hour_tested = '".(date('H')-1)."'";				//taking data from mysql database
+$result = $conn->query($sqlQZet);
+$prevTempZet = $result->fetch_array(MYSQLI_NUM);
+
+$currTempZet = preg_replace('/[^-?0-9]/', '', $aktualna_temperatura->plaintext);	//changing current temperature to be usable in an equation
+if($prevTempZet != NULL){
+	
+$errTempZet = $prevTempZet[0] - $currTempZet;					//calculating error
+$sqlZet = "UPDATE zet_errtemp1 SET `".date('H')."`= ".$errTempZet." WHERE Hour_tested = '".(date('H')-1)."'";//sending error to database
+
+if($conn->query($sqlZet) === FALSE) {
+	echo "Error: " .$sqlZet."<br>".$conn->error;
+}
+}
 $conn->close();
 
 
 	
 ?>
-</div>
+
+  </tbody>
 </body>
 </html>
